@@ -1,3 +1,17 @@
+compile_flags.txt
+peda-session-*
+
+# temporary files
+*.swp
+*.orig
+*.bkp
+*.~
+
+# Build targets
+Debug/
+Release/
+
+
 # Prerequisites
 *.d
 
