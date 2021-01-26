@@ -51,16 +51,13 @@ MainFrame::MainFrame(wxApp* app)
     // Setup wxElements
     // Timer
     timer = new wxTimer(this, static_cast<int>(IDs::Timer));
-    timer->Bind(
+    Bind(
         wxEVT_TIMER,                    // evt type
         &MainFrame::OnTimer,            // callback
         this,                           // parent
         timer->GetId()                  // id
     );
     timer->Start(DELTA_TIME, wxTIMER_CONTINUOUS);
-
-    wxButton* testBtn = new wxButton(this, wxID_ANY, "Test", wxPoint(20, 20));
-    testBtn->Bind(wxEVT_BUTTON, &MainFrame::OnButtonClick, this);
 }
 
 MainFrame::~MainFrame()
