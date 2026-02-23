@@ -1,3 +1,11 @@
+- LICENSE
+  -OR
+    - find out about icon license
+      - gnome project/adwaita
+    - find alternative icons
+    - make own icons
+  - load icons from file, don't compile
+  - add separate license file for icons
 - split timer from media playback via dependency injection (strategy pattern)
   - ITimerNotification with notify and reset and isNotified
     - MediaNotification (start playback, stop playback, isPlaying)
