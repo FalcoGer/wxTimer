@@ -1,0 +1,43 @@
+- split timer from media playback via dependency injection (strategy pattern)
+  - ITimerNotification with notify and reset and isNotified
+    - MediaNotification (start playback, stop playback, isPlaying)
+    - LogNotification (log, reset flag, return flag)
+    - SystemCommandNotification (execute, reset flag, return flag)
+      - wxExecute
+    - PopupNotification (modal show, noop, modal active)
+      - wxFrame::Raise()
+      - wxFrame::RequestUserAttention()
+      - messagebox/dialog + wxSTAY_ON_TOP?
+    - NothingNotification (set flag, reset flag, return flag)
+  - add other option for timer expired (radio button)
+    - use systems above
+- interface for alarm and timer classes
+  - activate
+  - deactivate
+  - isActive
+  - notify
+  - notifyReset
+  - isNotified
+- separate grid attribute for red background and normal background in timer table (and later in alarm table, too)
+  - choose based on isNotified return from interface
+- alarms
+  - time of day
+  - day of week repeat / no repeat
+  - one shot specific date and time
+  - time till next alarm
+  - reuse notification system from above
+- save to file
+  - onClose?
+  - whenever a timer/alarm is added?
+  - both?
+  - where to put serialize/deserialize logic?
+    - use std::format + scnlib?
+    - wxJSON
+    - reflection framework?
+      - can't compile on windows yet (or does MSVC 2026 support reflection and annotations yet? doubtful)
+      - needs more robust serialization and deserialization logic
+      - need to basically implement newtonsoftjson in c++ reflection using new user defined attributes
+      - no dependencies
+  - wxStandardPaths::Get().GetUserDataDir() (~/.config or Appdata)
+- load from file whenever application is loaded, timers stopped, alarms as they were
+- figure out how to build this shit for windows and link wx statically / ship with wx dlls?

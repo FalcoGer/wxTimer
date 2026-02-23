@@ -1,26 +1,25 @@
-#include <wx/wx.h>
-#include "MainFrame.h"
+#include "WxTimerFrame.hpp"
 
-// application class
-class Main : public wxApp
+#include <wx/wxprec.h>
+
+#ifndef WX_PRECOMP
+#  include <wx/wx.h>
+#endif
+
+namespace
 {
-public:
-	// function called at the application initialization
-	virtual bool OnInit();
+class Application : public wxApp
+{
+  public:
+    auto OnInit() -> bool
+    {
+        wxInitAllImageHandlers();
+        //NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
+        auto* const ptr_frame = new WxTimerFrame(nullptr);
+        ptr_frame->Show(true);
+        return true;
+    }
 };
+}    // namespace
 
-
-IMPLEMENT_APP(Main)
-
-bool Main::OnInit()
-{
-	// create a new frame and set it as the top most application window
-    MainFrame* mainFrame = new MainFrame(this);
-	SetTopWindow(mainFrame);
-
-	// show main frame
-	mainFrame->Show();
-
-	// enter the application's main loop
-	return true;
-}
+wxIMPLEMENT_APP(Application);

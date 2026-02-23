@@ -8,9 +8,7 @@ peda-session-*
 *.~
 
 # Build targets
-Debug/
-Release/
-
+/build
 
 # Prerequisites
 *.d
