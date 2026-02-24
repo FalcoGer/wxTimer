@@ -1,12 +1,22 @@
+#include "AudioPlaybackObserver.hpp"
 #include "DialogAddEditTimer.hpp"
 #include <chrono>
 
-DialogAddEditTimer::DialogAddEditTimer(wxWindow* const ptr_parent, Timer timer)
+DialogAddEditTimer::DialogAddEditTimer(wxWindow* const ptr_parent, CountdownTimer timer)
         : DialogAddEditTimerBase(ptr_parent), m_timer(std::move(timer))
 {
+    IObserver* const ptr_observer = m_timer.getObserver().get();
+    // TODO: Set radio boxes to correct state and update field enabled for all fields
+    {
+        auto* const ptr_audioPlaybackObserver = dynamic_cast<AudioPlaybackObserver*>(ptr_observer);
+        if (ptr_audioPlaybackObserver != nullptr)
+        {
+            m_textCtrlSoundFilePath->SetValue(ptr_audioPlaybackObserver->getSoundFile().string());
+            m_cbLoopAudio->SetValue(ptr_audioPlaybackObserver->getLoopAudio());
+        }
+    }
+
     m_textCtrlTimerName->SetValue(m_timer.getName());
-    m_textCtrlSoundFilePath->SetValue(m_timer.getSoundFile().string());
-    m_cbLoopAudio->SetValue(m_timer.getLoopAudio());
     const std::chrono::duration<double> TIME               = m_timer.getDuration();
 
     constexpr int                       SECONDS_PER_HOUR   = 3'600;
@@ -19,10 +29,11 @@ DialogAddEditTimer::DialogAddEditTimer(wxWindow* const ptr_parent, Timer timer)
     m_timePicker->SetTime(HOUR, MINUTE, SECOND);
 }
 [[nodiscard]]
-auto DialogAddEditTimer::getTimer() const -> Timer
+auto DialogAddEditTimer::extractTimer() -> CountdownTimer&&
 {
-    return m_timer;
+    return std::move(m_timer);
 }
+
 void DialogAddEditTimer::onNameChange(wxCommandEvent& event)
 {
     m_timer.setName(event.GetString().ToStdString());
@@ -36,7 +47,12 @@ void DialogAddEditTimer::onTimeChange(wxDateEvent& event)
 }
 void DialogAddEditTimer::onFileChange(wxCommandEvent& event)
 {
-    const auto RESULT = m_timer.setSoundFile(event.GetString().ToStdString());
+    auto* const ptr_observer = dynamic_cast<AudioPlaybackObserver*>(m_timer.getObserver().get());
+    if (ptr_observer == nullptr)
+    {
+        return;
+    }
+    const auto RESULT = ptr_observer->setSoundFile(event.GetString().ToStdString());
     if (RESULT.has_value())
     {
         m_sdbSizerOK->Enable(true);
@@ -57,7 +73,7 @@ void DialogAddEditTimer::onButtonOpenClick([[maybe_unused]] wxCommandEvent& even
       "Select Sound File",
       defaultDirectory,
       wxEmptyString,
-      Timer::GetFileExtensionList().getWildcardForFileDialogue(true, true),
+      AudioPlaybackObserver::GetFileExtensionList().getWildcardForFileDialogue(true, true),
       wxDEFAULT_DIALOG_STYLE | wxFD_OPEN | wxFD_FILE_MUST_EXIST
     );
 
@@ -69,5 +85,10 @@ void DialogAddEditTimer::onButtonOpenClick([[maybe_unused]] wxCommandEvent& even
 }
 void DialogAddEditTimer::onCBLoopAudioChange(wxCommandEvent& event)
 {
-    m_timer.setLoopAudio(event.IsChecked());
+    auto* const ptr_observer = dynamic_cast<AudioPlaybackObserver*>(m_timer.getObserver().get());
+    if (ptr_observer == nullptr)
+    {
+        return;
+    }
+    ptr_observer->setLoopAudio(event.IsChecked());
 }

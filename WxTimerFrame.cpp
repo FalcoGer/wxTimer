@@ -1,8 +1,12 @@
+#include "AudioPlaybackObserver.hpp"
+#include "CountdownTimer.hpp"
 #include "DialogAddEditTimer.hpp"
 #include "WxTimerFrame.hpp"
 #include "resources/stop.png.h"
 #include <algorithm>
 #include <chrono>
+#include <filesystem>
+#include <memory>
 #include <ranges>
 #include <wx/event.h>
 #include <wx/font.h>
@@ -69,31 +73,8 @@ void WxTimerFrame::onTimerElapsed([[maybe_unused]] wxTimerEvent& event)
         }
         case 1:
         {
-            // is checking slower than just redrawing every time?
-            if (std::ranges::any_of(m_timerTable->getTimers(), [](const Timer& timer) { return timer.isStarted(); }))
-            {
-                if (std::ranges::any_of(m_timerTable->getTimers(), [](const Timer& timer) { return timer.hasElapsed(); }))
-                {
-                    m_timerButtonCancel->Enable();
-
-                    for (const auto& [idx, timer] : m_timerTable->getTimers() | std::views::enumerate)
-                    {
-                        if (timer.hasElapsed())
-                        {
-                            timer.audioPlay();
-                        }
-                        else
-                        {
-                            const wxColour COLOR = wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND);
-                        }
-                    }
-                }
-                m_gridTimer->Refresh();
-            }
-            else
-            {
-                m_timerButtonCancel->Enable(false);
-            }
+            m_gridTimer->Refresh();
+            m_timerButtonCancel->Enable(std::ranges::any_of(m_timerTable->getTimers(), [](const CountdownTimer& timer) { return timer.isNotified(); }));
             break;
         }
         default:
@@ -101,6 +82,7 @@ void WxTimerFrame::onTimerElapsed([[maybe_unused]] wxTimerEvent& event)
             break;
         }
     }
+    std::ranges::for_each(m_timerTable->getTimers(), [](CountdownTimer& timer) { timer.update(); });
 }
 void WxTimerFrame::onClickStopwatchStartLap([[maybe_unused]] wxCommandEvent& event)
 {
@@ -122,12 +104,18 @@ void WxTimerFrame::onClickStopwatchReset([[maybe_unused]] wxCommandEvent& event)
 }
 void WxTimerFrame::onAddTimerClick([[maybe_unused]] wxCommandEvent& event)
 {
-    const auto         DEFAULT_TIME = std::chrono::minutes(10);
-    DialogAddEditTimer dialog(this, Timer {this, "New Timer", DEFAULT_TIME, std::filesystem::path(), true});
+    const auto DEFAULT_TIME = std::chrono::minutes(10);
+    auto observer = std::make_unique<AudioPlaybackObserver>(this, std::filesystem::path(), true);
+    DialogAddEditTimer dialog(
+      this,
+      CountdownTimer {
+        "New Timer", DEFAULT_TIME, std::move(observer)
+      }
+    );
 
     if (dialog.ShowModal() == wxID_OK)
     {
-        m_timerTable->addTimer(dialog.getTimer());
+        m_timerTable->addTimer(dialog.extractTimer());
         m_gridTimer->Refresh();
     }
 }
@@ -139,7 +127,7 @@ void WxTimerFrame::onEditTimerClick([[maybe_unused]] wxCommandEvent& event)
         DialogAddEditTimer dialog(this, m_timerTable->getTimerCopy(ROW));
         if (dialog.ShowModal() == wxID_OK)
         {
-            auto timer = dialog.getTimer();
+            auto timer = dialog.extractTimer();
             timer.stopTimer();
             m_timerTable->setTimer(ROW, std::move(timer));
             wxGridEvent evt{wxID_ANY, wxEVT_GRID_SELECT_CELL, m_gridTimer, ROW, m_gridTimer->GetGridCursorCol()};

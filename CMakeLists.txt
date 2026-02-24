@@ -24,6 +24,18 @@ include(${wxWidgets_USE_FILE})
 include_directories(${wxWidgets_INCLUDE_DIRS})
 link_directories(${wxWidgets_LIBRARY_DIRS})
 
-add_executable(wxTimer main.cpp WxTimerFrame.cpp DialogAddEditTimer.cpp WxTimerBase.cpp FileExtensionList.cpp Timer.cpp StopwatchTable.cpp TimerTable.cpp)
+add_executable(wxTimer
+    main.cpp
+    WxTimerFrame.cpp
+    DialogAddEditTimer.cpp
+    WxTimerBase.cpp
+    FileExtensionList.cpp
+    TimerBase.cpp
+    CountdownTimer.cpp
+    StopwatchTable.cpp
+    TimerTable.cpp
+    AudioPlaybackObserver.cpp
+    NothingObserver.cpp
+)
 
 target_link_libraries(wxTimer ${wxWidgets_LIBRARIES})

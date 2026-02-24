@@ -7,18 +7,20 @@
 #ifndef WX_PRECOMP
 #  include <wx/wx.h>
 #endif
-#include "Timer.hpp"
+#include "CountdownTimer.hpp"
 #include <vector>
 
 class TimerTable : public wxGridTableBase
 {
   private:
-    std::vector<Timer> m_timers;
-    void               sortTimers();
+    std::vector<CountdownTimer> m_timers;
+    void                        sortTimers();
 
-    wxGridCellAttr* m_attrName;
-    wxGridCellAttr* m_attrTime;
-    wxGridCellAttr* m_attrActive;
+    wxGridCellAttr*             leftSysBGAttr;
+    wxGridCellAttr*             leftRedBGAttr;
+    wxGridCellAttr*             rightSysBGAttr;
+    wxGridCellAttr*             rightRedBGAttr;
+    wxGridCellAttr*             m_checkboxAttr;
 
   public:
     TimerTable();
@@ -37,13 +39,13 @@ class TimerTable : public wxGridTableBase
     void SetValue(int row, int col, const wxString& value) override;
     auto GetAttr(int row, int col, wxGridCellAttr::wxAttrKind kind) -> wxGridCellAttr* override;
 
-    void setTimer(int row, Timer&& timer);
+    void setTimer(int row, CountdownTimer&& timer);
 
     [[nodiscard]]
     auto        getTimerStarted(int row) const -> bool;
-    auto        getTimerCopy(int row) -> Timer { return m_timers.at(static_cast<std::size_t>(row)); }
-    auto        getTimers() -> std::vector<Timer>& { return m_timers; }
-    void        addTimer(Timer&& timer);
+    auto        getTimerCopy(int row) -> CountdownTimer { return m_timers.at(static_cast<std::size_t>(row)); }
+    auto        getTimers() -> std::vector<CountdownTimer>& { return m_timers; }
+    void        addTimer(CountdownTimer&& timer);
     // NOLINTNEXTLINE(google-default-arguments) // It can't be helped. Not my interface.
     auto        DeleteRows(std::size_t pos, std::size_t numRows = 1) -> bool override;
     auto        GetColLabelValue(int col) -> wxString override;

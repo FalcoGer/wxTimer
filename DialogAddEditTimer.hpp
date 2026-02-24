@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Timer.hpp"
+#include "CountdownTimer.hpp"
 #include "WxTimerBase.h"
 #include <cstdlib>
 #include <wx/dialog.h>
@@ -10,15 +10,15 @@
 class DialogAddEditTimer : public DialogAddEditTimerBase
 {
   private:
-    Timer m_timer;
+    CountdownTimer m_timer;
     // NOLINTNEXTLINE(concurrency-mt-unsafe, bugprone-throwing-static-initialization)
-    inline static std::string defaultDirectory{getenv("HOME")};
+    static inline std::string defaultDirectory {getenv("HOME")};
 
   public:
-    explicit DialogAddEditTimer(wxWindow* const ptr_parent, Timer timer);
+    explicit DialogAddEditTimer(wxWindow* const ptr_parent, CountdownTimer timer);
 
     [[nodiscard]]
-    auto getTimer() const -> Timer;
+    auto extractTimer() -> CountdownTimer&&;
 
   protected:
     void onNameChange(wxCommandEvent& event) override;

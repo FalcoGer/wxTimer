@@ -10,7 +10,7 @@ void TimerTable::sortTimers()
 {
     std::ranges::sort(
       m_timers,
-      [](const Timer& lhs, const Timer& rhs) -> bool
+      [](const CountdownTimer& lhs, const CountdownTimer& rhs) -> bool
       {
           return std::forward_as_tuple(!lhs.isStarted(), lhs.getTime(), lhs.getName())
                  < std::forward_as_tuple(!rhs.isStarted(), rhs.getTime(), rhs.getName());
@@ -20,22 +20,42 @@ void TimerTable::sortTimers()
     wxGridTableMessage msg(this, wxGRIDTABLE_REQUEST_VIEW_GET_VALUES);
     GetView()->ProcessTableMessage(msg);
 }
-TimerTable::TimerTable() : m_attrName {new wxGridCellAttr()}, m_attrTime {new wxGridCellAttr()}, m_attrActive {new wxGridCellAttr()}
+TimerTable::TimerTable() :
+    leftSysBGAttr(new wxGridCellAttr()),
+    leftRedBGAttr(new wxGridCellAttr()),
+    rightSysBGAttr(new wxGridCellAttr()),
+    rightRedBGAttr(new wxGridCellAttr()),
+    m_checkboxAttr(new wxGridCellAttr())
 {
-    m_attrName->SetAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
-    m_attrTime->SetAlignment(wxALIGN_RIGHT, wxALIGN_CENTER);
-    m_attrTime->SetReadOnly();
-    m_attrActive->SetAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
+    const wxColour DEFAULT = wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND);
+    const wxColour RED     = wxColour(255, 0, 0);
+
+    leftSysBGAttr->SetBackgroundColour(DEFAULT);
+    leftRedBGAttr->SetBackgroundColour(RED);
+    rightSysBGAttr->SetBackgroundColour(DEFAULT);
+    rightRedBGAttr->SetBackgroundColour(RED);
+
+    leftSysBGAttr->SetAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
+    leftRedBGAttr->SetAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
+    rightSysBGAttr->SetAlignment(wxALIGN_RIGHT, wxALIGN_CENTER);
+    rightRedBGAttr->SetAlignment(wxALIGN_RIGHT, wxALIGN_CENTER);
+
+    // hack, but it works because we only use right attributes for the time field
+    rightSysBGAttr->SetReadOnly();
+    rightRedBGAttr->SetReadOnly();
+
+    m_checkboxAttr->SetAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
     // NOLINTNEXTLINE(cppcoreguidelines-owning-memory) // wx receiver takes ownership.
-    m_attrActive->SetRenderer(new wxGridCellBoolRenderer());
+    m_checkboxAttr->SetRenderer(new wxGridCellBoolRenderer());
     // NOLINTNEXTLINE(cppcoreguidelines-owning-memory) // wx receiver takes ownership.
-    m_attrActive->SetEditor(new wxGridCellBoolEditor());
+    m_checkboxAttr->SetEditor(new wxGridCellBoolEditor());
 }
 TimerTable::~TimerTable()
 {
-    m_attrName->DecRef();
-    m_attrTime->DecRef();
-    m_attrActive->DecRef();
+    for (auto* const ptr_attr : {leftSysBGAttr, leftRedBGAttr, rightSysBGAttr, rightRedBGAttr, m_checkboxAttr})
+    {
+        ptr_attr->DecRef();
+    }
 }
 auto TimerTable::GetNumberRows() -> int
 {
@@ -97,7 +117,7 @@ void TimerTable::SetValue(int row, int col, const wxString& value)
         default: break;
     }
 }
-void TimerTable::setTimer(int row, Timer&& timer)
+void TimerTable::setTimer(int row, CountdownTimer&& timer)
 {
     m_timers.at(static_cast<std::size_t>(row)) = std::move(timer);
     sortTimers();
@@ -107,7 +127,7 @@ auto TimerTable::getTimerStarted(int row) const -> bool
 {
     return m_timers.at(static_cast<std::size_t>(row)).isStarted();
 }
-void TimerTable::addTimer(Timer&& timer)
+void TimerTable::addTimer(CountdownTimer&& timer)
 {
     m_timers.emplace_back(std::move(timer));
     sortTimers();
@@ -131,7 +151,7 @@ auto TimerTable::GetColLabelValue(int col) -> wxString
     {
         case 0:  return "Name";
         case 1:  return "Time";
-        case 2:  return "R";
+        case 2:  return "";
         default: return "INVALID";
     }
 }
@@ -162,47 +182,30 @@ auto TimerTable::GetAttr(int row, int col, wxGridCellAttr::wxAttrKind kind) -> w
         return wxGridTableBase::GetAttr(row, col, kind);
     }
 
-    const bool TIMER_ELAPSED = m_timers.at(static_cast<std::size_t>(row)).hasElapsed();
-    const wxColour COLOR         = [TIMER_ELAPSED]() -> wxColour
+    const bool TIMER_NOTIFIED = m_timers.at(static_cast<std::size_t>(row)).isNotified();
+    wxGridCellAttr* const ptr_attr      = [this, TIMER_NOTIFIED, col]() -> wxGridCellAttr*
     {
-        const wxColour DEFAULT = wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND);
-        if (!TIMER_ELAPSED)
-        {
-            return DEFAULT;
-        }
         const int64_t NOW =
           std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()).time_since_epoch()
           )
             .count();
         const int64_t HALF_SECOND = 500;
-        const wxColour RED = wxColour(255, 0, 0);
-        return (NOW / HALF_SECOND) % 2 == 0 ? RED : DEFAULT;
+        const bool    IS_RED       = TIMER_NOTIFIED && (NOW / HALF_SECOND) % 2 == 0;
+        switch (col)
+        {
+            case 0:  return IS_RED ? leftRedBGAttr : leftSysBGAttr;
+            case 1:  return IS_RED ? rightRedBGAttr : rightSysBGAttr;
+            case 2:  return m_checkboxAttr;
+            default: return nullptr;
+        }
     }();
 
-
-    switch (col)
+    if (ptr_attr == nullptr)
     {
-        case 0:
-        {
-            m_attrName->SetBackgroundColour(COLOR);
-            m_attrName->IncRef();
-            return m_attrName;
-        }
-        case 1:
-        {
-            m_attrTime->SetBackgroundColour(COLOR);
-            m_attrTime->IncRef();
-            return m_attrTime;
-        }
-        case 2:
-        {
-            m_attrActive->IncRef();
-            return m_attrActive;
-        }
-        default:
-        {
-            return wxGridTableBase::GetAttr(row, col, kind);
-        }
+        return wxGridTableBase::GetAttr(row, col, kind);
     }
+
+    ptr_attr->IncRef();
+    return ptr_attr;
 }
