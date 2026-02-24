@@ -1,5 +1,6 @@
 compile_flags.txt
 peda-session-*
+/.vscode
 
 # temporary files
 *.swp
