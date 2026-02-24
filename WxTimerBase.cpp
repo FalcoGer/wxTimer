@@ -237,26 +237,61 @@ DialogAddEditTimerBase::DialogAddEditTimerBase( wxWindow* parent, wxWindowID id,
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxVERTICAL );
 
-	m_staticText4 = new wxStaticText( this, wxID_ANY, _("Sound to play"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText4->Wrap( -1 );
-	bSizer9->Add( m_staticText4, 1, wxALL, 5 );
+	m_radioBtnNothing = new wxRadioButton( this, wxID_ANY, _("Do nothing (Flash in list only)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+	m_radioBtnNothing->SetValue( true );
+	bSizer9->Add( m_radioBtnNothing, 0, wxALL, 5 );
+
+	m_radioBtnAudio = new wxRadioButton( this, wxID_ANY, _("Play Sound"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer9->Add( m_radioBtnAudio, 0, wxALL, 5 );
+
+	wxStaticBoxSizer* m_sbSizerAudio;
+	m_sbSizerAudio = new wxStaticBoxSizer( wxVERTICAL, this, _("Sound file") );
 
 	wxBoxSizer* bSizer10;
 	bSizer10 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_textCtrlSoundFilePath = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_DONTWRAP );
+	m_textCtrlSoundFilePath = new wxTextCtrl( m_sbSizerAudio->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_DONTWRAP );
 	bSizer10->Add( m_textCtrlSoundFilePath, 1, wxALL|wxEXPAND, 5 );
 
-	m_bpButton7 = new wxBitmapButton( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW|0 );
+	m_btnFileOpen = new wxBitmapButton( m_sbSizerAudio->GetStaticBox(), wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW|0 );
 
-	m_bpButton7->SetBitmap( wxArtProvider::GetBitmap( wxASCII_STR(wxART_FILE_OPEN), wxASCII_STR(wxART_BUTTON) ) );
-	bSizer10->Add( m_bpButton7, 0, wxALL, 5 );
+	m_btnFileOpen->SetBitmap( wxArtProvider::GetBitmap( wxASCII_STR(wxART_FILE_OPEN), wxASCII_STR(wxART_BUTTON) ) );
+	bSizer10->Add( m_btnFileOpen, 0, wxALL, 5 );
 
 
-	bSizer9->Add( bSizer10, 0, wxEXPAND, 5 );
+	m_sbSizerAudio->Add( bSizer10, 0, wxEXPAND, 5 );
 
-	m_cbLoopAudio = new wxCheckBox( this, wxID_ANY, _("Loop Audio"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer9->Add( m_cbLoopAudio, 0, wxALL, 5 );
+	m_cbLoopAudio = new wxCheckBox( m_sbSizerAudio->GetStaticBox(), wxID_ANY, _("Loop Audio"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_sbSizerAudio->Add( m_cbLoopAudio, 0, wxALL, 5 );
+
+
+	bSizer9->Add( m_sbSizerAudio, 0, wxEXPAND|wxLEFT, 32 );
+
+	m_radioBtnCommand = new wxRadioButton( this, wxID_ANY, _("Execute Command"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer9->Add( m_radioBtnCommand, 0, wxALL, 5 );
+
+	wxStaticBoxSizer* m_sbSizerCommand;
+	m_sbSizerCommand = new wxStaticBoxSizer( wxVERTICAL, this, _("Command") );
+
+	wxBoxSizer* bSizer11;
+	bSizer11 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_textCtrlCommand = new wxTextCtrl( m_sbSizerCommand->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_DONTWRAP );
+	bSizer11->Add( m_textCtrlCommand, 1, wxALL, 5 );
+
+	m_btnCommand = new wxBitmapButton( m_sbSizerCommand->GetStaticBox(), wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW|0 );
+
+	m_btnCommand->SetBitmap( wxArtProvider::GetBitmap( wxASCII_STR(wxART_FILE_OPEN), wxASCII_STR(wxART_BUTTON) ) );
+	bSizer11->Add( m_btnCommand, 0, wxALL, 5 );
+
+
+	m_sbSizerCommand->Add( bSizer11, 0, wxEXPAND, 5 );
+
+
+	bSizer9->Add( m_sbSizerCommand, 1, wxEXPAND|wxLEFT, 32 );
+
+	m_radioBtnPopup = new wxRadioButton( this, wxID_ANY, _("Popup"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer9->Add( m_radioBtnPopup, 0, wxALL, 5 );
 
 
 	bSizer6->Add( bSizer9, 1, wxEXPAND, 5 );
@@ -280,9 +315,15 @@ DialogAddEditTimerBase::DialogAddEditTimerBase( wxWindow* parent, wxWindowID id,
 	// Connect Events
 	m_textCtrlTimerName->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( DialogAddEditTimerBase::onNameChange ), NULL, this );
 	m_timePicker->Connect( wxEVT_TIME_CHANGED, wxDateEventHandler( DialogAddEditTimerBase::onTimeChange ), NULL, this );
+	m_radioBtnNothing->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( DialogAddEditTimerBase::onRBDoNothing ), NULL, this );
+	m_radioBtnAudio->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( DialogAddEditTimerBase::onRBAudio ), NULL, this );
 	m_textCtrlSoundFilePath->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( DialogAddEditTimerBase::onFileChange ), NULL, this );
-	m_bpButton7->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DialogAddEditTimerBase::onButtonOpenClick ), NULL, this );
+	m_btnFileOpen->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DialogAddEditTimerBase::onButtonOpenClick ), NULL, this );
 	m_cbLoopAudio->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( DialogAddEditTimerBase::onCBLoopAudioChange ), NULL, this );
+	m_radioBtnCommand->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( DialogAddEditTimerBase::onRBCommand ), NULL, this );
+	m_textCtrlCommand->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( DialogAddEditTimerBase::onCommandChange ), NULL, this );
+	m_btnCommand->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DialogAddEditTimerBase::onButtonCommandClick ), NULL, this );
+	m_radioBtnPopup->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( DialogAddEditTimerBase::onRBPopup ), NULL, this );
 }
 
 DialogAddEditTimerBase::~DialogAddEditTimerBase()

@@ -30,7 +30,9 @@
 #include <wx/textctrl.h>
 #include <wx/timectrl.h>
 #include <wx/dateevt.h>
+#include <wx/radiobut.h>
 #include <wx/checkbox.h>
+#include <wx/statbox.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -91,10 +93,15 @@ class DialogAddEditTimerBase : public wxDialog
 		wxTextCtrl* m_textCtrlTimerName;
 		wxStaticText* m_staticText2;
 		wxTimePickerCtrl* m_timePicker;
-		wxStaticText* m_staticText4;
+		wxRadioButton* m_radioBtnNothing;
+		wxRadioButton* m_radioBtnAudio;
 		wxTextCtrl* m_textCtrlSoundFilePath;
-		wxBitmapButton* m_bpButton7;
+		wxBitmapButton* m_btnFileOpen;
 		wxCheckBox* m_cbLoopAudio;
+		wxRadioButton* m_radioBtnCommand;
+		wxTextCtrl* m_textCtrlCommand;
+		wxBitmapButton* m_btnCommand;
+		wxRadioButton* m_radioBtnPopup;
 		wxStdDialogButtonSizer* m_sdbSizer;
 		wxButton* m_sdbSizerOK;
 		wxButton* m_sdbSizerCancel;
@@ -102,9 +109,15 @@ class DialogAddEditTimerBase : public wxDialog
 		// Virtual event handlers, override them in your derived class
 		virtual void onNameChange( wxCommandEvent& event ) = 0;
 		virtual void onTimeChange( wxDateEvent& event ) = 0;
+		virtual void onRBDoNothing( wxCommandEvent& event ) = 0;
+		virtual void onRBAudio( wxCommandEvent& event ) = 0;
 		virtual void onFileChange( wxCommandEvent& event ) = 0;
 		virtual void onButtonOpenClick( wxCommandEvent& event ) = 0;
 		virtual void onCBLoopAudioChange( wxCommandEvent& event ) = 0;
+		virtual void onRBCommand( wxCommandEvent& event ) = 0;
+		virtual void onCommandChange( wxCommandEvent& event ) = 0;
+		virtual void onButtonCommandClick( wxCommandEvent& event ) = 0;
+		virtual void onRBPopup( wxCommandEvent& event ) = 0;
 
 
 	public:

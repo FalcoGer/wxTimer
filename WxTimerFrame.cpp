@@ -1,11 +1,10 @@
-#include "AudioPlaybackObserver.hpp"
 #include "CountdownTimer.hpp"
 #include "DialogAddEditTimer.hpp"
+#include "NothingObserver.hpp"
 #include "WxTimerFrame.hpp"
 #include "resources/stop.png.h"
 #include <algorithm>
 #include <chrono>
-#include <filesystem>
 #include <memory>
 #include <ranges>
 #include <wx/event.h>
@@ -105,7 +104,7 @@ void WxTimerFrame::onClickStopwatchReset([[maybe_unused]] wxCommandEvent& event)
 void WxTimerFrame::onAddTimerClick([[maybe_unused]] wxCommandEvent& event)
 {
     const auto DEFAULT_TIME = std::chrono::minutes(10);
-    auto observer = std::make_unique<AudioPlaybackObserver>(this, std::filesystem::path(), true);
+    auto observer = std::make_unique<NothingObserver>();
     DialogAddEditTimer dialog(
       this,
       CountdownTimer {

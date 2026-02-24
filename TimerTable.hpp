@@ -16,10 +16,10 @@ class TimerTable : public wxGridTableBase
     std::vector<CountdownTimer> m_timers;
     void                        sortTimers();
 
-    wxGridCellAttr*             leftSysBGAttr;
-    wxGridCellAttr*             leftRedBGAttr;
-    wxGridCellAttr*             rightSysBGAttr;
-    wxGridCellAttr*             rightRedBGAttr;
+    wxGridCellAttr*             m_leftSysBgAttr;
+    wxGridCellAttr*             m_leftRedBgAttr;
+    wxGridCellAttr*             m_rightSysBgAttr;
+    wxGridCellAttr*             m_rightRedBgAttr;
     wxGridCellAttr*             m_checkboxAttr;
 
   public:
