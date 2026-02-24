@@ -1,3 +1,17 @@
+- LICENSE
+  -OR
+    - find out about icon license
+      - gnome project/adwaita
+    - find alternative icons
+      - lucide icons (MIT like, licence inclusion required for icons)
+      - google Material Symbols (apache 2.0)
+      - remix icon (https://github.com/Remix-Design/remixicon/blob/master/License)
+        - no attribution required
+        - can do light edits
+        - can not use as main application icon
+    - make own icons
+  - load icons from file, don't compile
+  - add separate license file for icons
 - split timer from media playback via dependency injection (strategy pattern)
   - ITimerNotification with notify and reset and isNotified
     - MediaNotification (start playback, stop playback, isPlaying)
