@@ -153,9 +153,6 @@ void WxTimerFrame::onStartStopTimerClick([[maybe_unused]] wxCommandEvent& event)
     {
         const bool STARTED = m_timerTable->getTimerStarted(ROW);
         m_timerTable->SetValue(ROW, 2, STARTED ? "" : "1");
-        const wxColour COLOR = wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND);
-        m_gridTimer->SetCellBackgroundColour(ROW, 0, COLOR);
-        m_gridTimer->SetCellBackgroundColour(ROW, 1, COLOR);
         wxGridEvent evt{wxID_ANY, wxEVT_GRID_SELECT_CELL, m_gridTimer, ROW, m_gridTimer->GetGridCursorCol()};
         onTimerGridSelectionChanged(evt);
         m_gridTimer->Refresh();
@@ -169,9 +166,6 @@ void WxTimerFrame::onCancelTimerClick([[maybe_unused]] wxCommandEvent& event)
     {
         if (timer.hasElapsed())
         {
-            const wxColour COLOR = wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND);
-            m_gridTimer->SetCellBackgroundColour(static_cast<int>(idx), 0, COLOR);
-            m_gridTimer->SetCellBackgroundColour(static_cast<int>(idx), 1, COLOR);
             elapsedTimers.push_back(static_cast<int>(idx));
         }
     }
@@ -209,10 +203,6 @@ void WxTimerFrame::onTimerGridSelectionChanged(wxGridEvent& event)
 void WxTimerFrame::onTimerGridCellChange(wxGridEvent& event)
 {
     const auto     ROW   = event.GetRow();
-    const wxColour COLOR = wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND);
-    m_gridTimer->SetCellBackgroundColour(static_cast<int>(ROW), 0, COLOR);
-    m_gridTimer->SetCellBackgroundColour(static_cast<int>(ROW), 1, COLOR);
-
     const bool STARTED = m_timerTable->getTimerStarted(ROW);
     m_timerButtonStartStop->SetToolTip(STARTED ? "Stop timer" : "Start timer");
     m_timerButtonStartStop->SetBitmap(STARTED ? stop_png_to_wx_bitmap() : play_png_to_wx_bitmap());
