@@ -147,3 +147,47 @@ void ObserverCreationPanel::updateRadioButtonControls(const ERadioButtonState ST
     }
     notifyParent();
 }
+ObserverCreationPanel::ObserverCreationPanel(wxWindow* ptr_parent, wxWindow* ptr_mainForm)
+        : ObserverCreationPanelBase(ptr_parent), m_mainForm(ptr_mainForm)
+{
+    setObserver(std::make_unique<NothingObserver>());
+}
+auto ObserverCreationPanel::isValid() const -> bool
+{
+    return m_valid;
+}
+auto ObserverCreationPanel::getObserver() -> IObserver&
+{
+    return *m_observer;
+}
+void ObserverCreationPanel::notifyParent()
+{
+    wxCommandEvent event(wxEVT_PANEL_UPDATED, GetId());
+    event.SetEventObject(this);
+    ProcessWindowEvent(event);
+}
+void ObserverCreationPanel::setObserver(std::unique_ptr<IObserver> observer)
+{
+    m_observer = std::move(observer);
+
+    {
+        auto* const ptr_nothingObserver = dynamic_cast<NothingObserver*>(m_observer.get());
+        if (ptr_nothingObserver != nullptr)
+        {
+            m_radioBtnNothing->SetValue(true);
+            updateRadioButtonControls(ERadioButtonState::DO_NOTHING);
+        }
+    }
+    {
+        auto* const ptr_audioPlaybackObserver = dynamic_cast<AudioPlaybackObserver*>(m_observer.get());
+        if (ptr_audioPlaybackObserver != nullptr)
+        {
+            m_radioBtnAudio->SetValue(true);
+            m_textCtrlSoundFilePath->SetValue(ptr_audioPlaybackObserver->getSoundFile().string());
+            m_cbLoopAudio->SetValue(ptr_audioPlaybackObserver->getLoopAudio());
+            updateRadioButtonControls(ERadioButtonState::AUDIO);
+        }
+    }
+    // TODO: Command
+    // TODO: Popup
+}

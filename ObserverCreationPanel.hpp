@@ -30,56 +30,18 @@ class ObserverCreationPanel : public ObserverCreationPanelBase
 
   public:
     // NOLINTNEXTLINE(bugprone-easily-swappable-parameters) // What can I do?
-    ObserverCreationPanel(wxWindow* ptr_parent, wxWindow* ptr_mainForm) : ObserverCreationPanelBase(ptr_parent), m_mainForm(ptr_mainForm)
-    {
-        setObserver(std::make_unique<NothingObserver>());
-    }
+    ObserverCreationPanel(wxWindow* ptr_parent, wxWindow* ptr_mainForm);
 
     [[nodiscard]]
-    auto isValid() const -> bool
-    {
-        return m_valid;
-    }
+    auto isValid() const -> bool;
 
     [[nodiscard]]
-    auto getObserver() -> IObserver&
-    {
-        return *m_observer;
-    }
+    auto getObserver() -> IObserver&;
 
-    void notifyParent()
-    {
-        wxCommandEvent event(wxEVT_PANEL_UPDATED, GetId());
-        event.SetEventObject(this);
-        ProcessWindowEvent(event);
-    }
+    void notifyParent();
 
-    void setObserver(std::unique_ptr<IObserver> observer)
-    {
-        m_observer = std::move(observer);
+    void setObserver(std::unique_ptr<IObserver> observer);
 
-        {
-            auto* const ptr_nothingObserver = dynamic_cast<NothingObserver*>(m_observer.get());
-            if (ptr_nothingObserver != nullptr)
-            {
-                m_radioBtnNothing->SetValue(true);
-                updateRadioButtonControls(ERadioButtonState::DO_NOTHING);
-            }
-        }
-        // TODO: Set radio boxes to correct state and update field enabled for all fields
-        {
-            auto* const ptr_audioPlaybackObserver = dynamic_cast<AudioPlaybackObserver*>(m_observer.get());
-            if (ptr_audioPlaybackObserver != nullptr)
-            {
-                m_radioBtnAudio->SetValue(true);
-                m_textCtrlSoundFilePath->SetValue(ptr_audioPlaybackObserver->getSoundFile().string());
-                m_cbLoopAudio->SetValue(ptr_audioPlaybackObserver->getLoopAudio());
-                updateRadioButtonControls(ERadioButtonState::AUDIO);
-            }
-        }
-        // TODO: Command
-        // TODO: Popup
-    }
   protected:
     void onFileChange(wxCommandEvent& event) override;
     void onButtonOpenClick(wxCommandEvent& event) override;
