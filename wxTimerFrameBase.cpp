@@ -21,7 +21,7 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-WxTimerBase::WxTimerBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+WxTimerFrameBase::WxTimerFrameBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
@@ -185,18 +185,18 @@ WxTimerBase::WxTimerBase( wxWindow* parent, wxWindowID id, const wxString& title
 	this->Centre( wxBOTH );
 
 	// Connect Events
-	this->Connect( m_timer.GetId(), wxEVT_TIMER, wxTimerEventHandler( WxTimerBase::onTimerElapsed ) );
-	m_buttonStopwatchStartLap->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerBase::onClickStopwatchStartLap ), NULL, this );
-	m_buttonStopwatchReset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerBase::onClickStopwatchReset ), NULL, this );
-	m_timerButtonAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerBase::onAddTimerClick ), NULL, this );
-	m_timerButtonEdit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerBase::onEditTimerClick ), NULL, this );
-	m_timerButtonDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerBase::onDeleteTimerClick ), NULL, this );
-	m_timerButtonStartStop->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerBase::onStartStopTimerClick ), NULL, this );
-	m_timerButtonCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerBase::onCancelTimerClick ), NULL, this );
-	m_gridTimer->Connect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( WxTimerBase::onTimerGridCellChange ), NULL, this );
-	m_gridTimer->Connect( wxEVT_GRID_SELECT_CELL, wxGridEventHandler( WxTimerBase::onTimerGridSelectionChanged ), NULL, this );
+	this->Connect( m_timer.GetId(), wxEVT_TIMER, wxTimerEventHandler( WxTimerFrameBase::onTimerElapsed ) );
+	m_buttonStopwatchStartLap->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerFrameBase::onClickStopwatchStartLap ), NULL, this );
+	m_buttonStopwatchReset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerFrameBase::onClickStopwatchReset ), NULL, this );
+	m_timerButtonAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerFrameBase::onAddTimerClick ), NULL, this );
+	m_timerButtonEdit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerFrameBase::onEditTimerClick ), NULL, this );
+	m_timerButtonDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerFrameBase::onDeleteTimerClick ), NULL, this );
+	m_timerButtonStartStop->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerFrameBase::onStartStopTimerClick ), NULL, this );
+	m_timerButtonCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerFrameBase::onCancelTimerClick ), NULL, this );
+	m_gridTimer->Connect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( WxTimerFrameBase::onTimerGridCellChange ), NULL, this );
+	m_gridTimer->Connect( wxEVT_GRID_SELECT_CELL, wxGridEventHandler( WxTimerFrameBase::onTimerGridSelectionChanged ), NULL, this );
 }
 
-WxTimerBase::~WxTimerBase()
+WxTimerFrameBase::~WxTimerFrameBase()
 {
 }

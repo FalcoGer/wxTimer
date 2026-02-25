@@ -161,12 +161,19 @@ auto TimerTable::GetColumnSizes(const wxGrid& grid) -> wxGridSizesInfo
 
     const auto WIDTH           = grid.GetSize().GetWidth();
     const auto COL_LABEL_WIDTH = grid.GetRowLabelSize();
-    const auto CB_COL_SIZE     = 30;
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast) // Safe because isn't changed, and also original grid is not const.
     wxClientDC dc {const_cast<wxGrid*>(&grid)};
     dc.SetFont(grid.GetDefaultCellFont());
-    const auto TIME_COL_SIZE   = dc.GetTextExtent("-00:00:00").GetWidth() + 10;
+    const auto TIME_COL_SIZE = dc.GetTextExtent("-00:00:00").GetWidth() + 10;
+
+    const auto DESTROY = [](wxCheckBox* ptr_obj) { ptr_obj->Destroy(); };
+    auto       temp          = std::unique_ptr<wxCheckBox, decltype(DESTROY)> {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast) // Safe because isn't changed, and also original grid is not const.
+      new wxCheckBox(const_cast<wxGrid*>(&grid), wxID_ANY, ""),
+      DESTROY
+    };
+    const auto CB_COL_SIZE = temp->GetBestSize().GetWidth() + 4;
 
     const auto SCOLL_BAR_WIDTH = wxSystemSettings::GetMetric(wxSYS_VSCROLL_X, &grid);
     const auto NAME_COL_SIZE =

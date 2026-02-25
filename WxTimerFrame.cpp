@@ -16,7 +16,7 @@
 auto play_png_to_wx_bitmap() -> wxBitmap&;
 
 WxTimerFrame::WxTimerFrame(wxWindow* ptr_parent)
-        : WxTimerBase(ptr_parent), m_stopwatchTable(new StopwatchTable()), m_timerTable(new TimerTable())
+        : WxTimerFrameBase(ptr_parent), m_stopwatchTable(new StopwatchTable()), m_timerTable(new TimerTable())
 {
     m_gridStopwatch->SetTable(m_stopwatchTable, true, wxGrid::wxGridSelectNone);
     m_gridStopwatch->Bind(

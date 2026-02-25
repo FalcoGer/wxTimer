@@ -30,9 +30,9 @@
 ///////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class WxTimerBase
+/// Class WxTimerFrameBase
 ///////////////////////////////////////////////////////////////////////////////
-class WxTimerBase : public wxFrame
+class WxTimerFrameBase : public wxFrame
 {
 	private:
 
@@ -67,9 +67,9 @@ class WxTimerBase : public wxFrame
 
 	public:
 
-		WxTimerBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Timer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 416,418 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		WxTimerFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Timer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 416,418 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
-		~WxTimerBase();
+		~WxTimerFrameBase();
 
 };
 

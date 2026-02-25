@@ -5,7 +5,7 @@
 #include "wxTimerFrameBase.h"
 #include <chrono>
 
-class WxTimerFrame : public WxTimerBase
+class WxTimerFrame : public WxTimerFrameBase
 {
   private:
     using TimePoint = std::chrono::time_point<std::chrono::steady_clock, std::chrono::milliseconds>;
