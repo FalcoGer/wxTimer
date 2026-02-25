@@ -27,8 +27,11 @@ link_directories(${wxWidgets_LIBRARY_DIRS})
 add_executable(wxTimer
     main.cpp
     WxTimerFrame.cpp
+    ObserverCreationPanel.cpp
     DialogAddEditTimer.cpp
-    WxTimerBase.cpp
+    wxTimerFrameBase.cpp
+    wxDialogAddEditTimerBase.cpp
+    wxObserverCreationPanelBase.cpp
     FileExtensionList.cpp
     TimerBase.cpp
     CountdownTimer.cpp

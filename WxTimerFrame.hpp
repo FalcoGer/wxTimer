@@ -2,7 +2,7 @@
 
 #include "StopwatchTable.hpp"
 #include "TimerTable.hpp"
-#include "WxTimerBase.h"
+#include "wxTimerFrameBase.h"
 #include <chrono>
 
 class WxTimerFrame : public WxTimerBase
