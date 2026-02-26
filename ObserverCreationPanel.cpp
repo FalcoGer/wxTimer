@@ -1,3 +1,5 @@
+#include "AudioPlaybackObserver.hpp"
+#include "NothingObserver.hpp"
 #include "ObserverCreationPanel.hpp"
 #include <wx/event.h>
 #include <wx/filedlg.h>
@@ -147,6 +149,7 @@ void ObserverCreationPanel::updateRadioButtonControls(const ERadioButtonState ST
     }
     notifyParent();
 }
+// NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 ObserverCreationPanel::ObserverCreationPanel(wxWindow* ptr_parent, wxWindow* ptr_mainForm)
         : ObserverCreationPanelBase(ptr_parent), m_mainForm(ptr_mainForm)
 {
@@ -164,7 +167,7 @@ void ObserverCreationPanel::notifyParent()
 {
     wxCommandEvent event(wxEVT_PANEL_UPDATED, GetId());
     event.SetEventObject(this);
-    ProcessWindowEvent(event);
+    GetEventHandler()->ProcessEvent(event);
 }
 void ObserverCreationPanel::setObserver(std::unique_ptr<IObserver> observer)
 {

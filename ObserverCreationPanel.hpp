@@ -1,8 +1,7 @@
 #pragma once
-
-#include "AudioPlaybackObserver.hpp"
-#include "NothingObserver.hpp"
+#include "IObserver.hpp"
 #include "wxObserverCreationPanelBase.h"
+#include <memory>
 #include <wx/event.h>
 
 // NOLINTNEXTLINE(readability-identifier-naming) // sticking to wx naming convention here

@@ -53,6 +53,7 @@ class WxTimerFrameBase : public wxFrame
 		wxPanel* m_panelAlarm;
 
 		// Virtual event handlers, override them in your derived class
+		virtual void onShow( wxShowEvent& event ) = 0;
 		virtual void onTimerElapsed( wxTimerEvent& event ) = 0;
 		virtual void onClickStopwatchStartLap( wxCommandEvent& event ) = 0;
 		virtual void onClickStopwatchReset( wxCommandEvent& event ) = 0;

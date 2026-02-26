@@ -185,6 +185,7 @@ WxTimerFrameBase::WxTimerFrameBase( wxWindow* parent, wxWindowID id, const wxStr
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	this->Connect( wxEVT_SHOW, wxShowEventHandler( WxTimerFrameBase::onShow ) );
 	this->Connect( m_timer.GetId(), wxEVT_TIMER, wxTimerEventHandler( WxTimerFrameBase::onTimerElapsed ) );
 	m_buttonStopwatchStartLap->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerFrameBase::onClickStopwatchStartLap ), NULL, this );
 	m_buttonStopwatchReset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WxTimerFrameBase::onClickStopwatchReset ), NULL, this );

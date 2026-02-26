@@ -43,7 +43,10 @@ WxTimerFrame::WxTimerFrame(wxWindow* ptr_parent)
           m_gridTimer->SetColSizes(TimerTable::GetColumnSizes(*m_gridTimer));
        }
     );
+}
 
+void WxTimerFrame::onShow([[maybe_unused]] wxShowEvent& event)
+{
     // resize the grids after the window actually exists
     CallAfter(
       [this]()

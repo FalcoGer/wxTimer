@@ -60,6 +60,7 @@
       <property name="window_name"></property>
       <property name="window_style">wxTAB_TRAVERSAL</property>
       <property name="xrc_skip_sizer">1</property>
+      <event name="OnShow">onShow</event>
       <object class="wxTimer" expanded="true">
         <property name="enabled">1</property>
         <property name="id">wxID_ANY</property>

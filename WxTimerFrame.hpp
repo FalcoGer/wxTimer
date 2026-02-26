@@ -28,6 +28,7 @@ class WxTimerFrame : public WxTimerFrameBase
     // FRAME
     // =======================================================
     void onTimerElapsed(wxTimerEvent& event) override;
+    void onShow(wxShowEvent& event) override;
 
     // ========================================================
     // STOPWATCH PAGE

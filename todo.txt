@@ -14,6 +14,9 @@
     - live with suboptimal icons from wx Art Provider
   - load icons from file, don't compile
   - add separate license file for icons
+- use validators
+  - for data transfer between widgets and member variables
+  - for checking validity of fields
 - system tray
   - cancel timers from tray
   - show timer with least time remaining
