@@ -18,9 +18,10 @@ AudioPlaybackObserver::AudioPlaybackObserver(const AudioPlaybackObserver& other)
 AudioPlaybackObserver::AudioPlaybackObserver(AudioPlaybackObserver&& other) noexcept
         : m_soundFile {std::move(other.m_soundFile)},
           m_loopAudio {other.m_loopAudio},
-          m_sound {std::exchange(other.m_sound, nullptr)}
+          m_sound {
+            (other.m_sound->Unbind(wxEVT_MEDIA_FINISHED, other.m_repeatEvent), std::exchange(other.m_sound, nullptr))
+          }
 {
-    m_sound->Unbind(wxEVT_MEDIA_FINISHED, other.m_repeatEvent);
     m_sound->Bind(wxEVT_MEDIA_FINISHED, m_repeatEvent);
 }
 
@@ -48,8 +49,8 @@ auto AudioPlaybackObserver::operator= (AudioPlaybackObserver&& rhs) noexcept -> 
     {
         m_sound->Destroy();
     }
+    rhs.m_sound->Unbind(wxEVT_MEDIA_FINISHED, rhs.m_repeatEvent);
     m_sound = std::exchange(rhs.m_sound, nullptr);
-    m_sound->Unbind(wxEVT_MEDIA_FINISHED, rhs.m_repeatEvent);
 
     m_sound->Bind(wxEVT_MEDIA_FINISHED, m_repeatEvent);
     return *this;
