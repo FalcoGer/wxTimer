@@ -97,9 +97,9 @@ void ObserverCreationPanel::onRBPopup([[maybe_unused]] wxCommandEvent& event)
 }
 void ObserverCreationPanel::onRBLog2File([[maybe_unused]] wxCommandEvent& event)
 {
-    // TODO: popup observer
+    // TODO: log observer
 
-    updateRadioButtonControls(ERadioButtonState::POPUP);
+    updateRadioButtonControls(ERadioButtonState::LOG);
     throw std::runtime_error("onRBLog2File not implemented");
 }
 void ObserverCreationPanel::onLogFileChange(wxCommandEvent& event)
@@ -240,6 +240,5 @@ void ObserverCreationPanel::setObserver(std::unique_ptr<IObserver> observer)
         }
     }
     // TODO: Command
-    // TODO: Popup
     // TODO: Log
 }

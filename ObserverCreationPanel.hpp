@@ -1,6 +1,5 @@
 #pragma once
 #include "IObserver.hpp"
-#include "TimerBase.hpp"
 #include "wxObserverCreationPanelBase.h"
 #include <memory>
 #include <wx/event.h>
