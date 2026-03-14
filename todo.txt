@@ -14,6 +14,8 @@
     - live with suboptimal icons from wx Art Provider
   - load icons from file, don't compile
   - add separate license file for icons
+- fix start/stop button not updating when popup observer finishes
+- create wxframe for popup such that the background window can continue running and display and activate more timers
 - use validators
   - for data transfer between widgets and member variables
   - for checking validity of fields
@@ -34,10 +36,6 @@
     - $-escape sequences for time (separated for y, m, d, h, m, s, timer name, timer duration)
   - SystemCommandNotification (execute, reset flag, return flag)
     - wxExecute
-  - PopupNotification (modal show, noop, modal active)
-    - wxFrame::Raise()
-    - wxFrame::RequestUserAttention()
-    - messagebox/dialog + wxSTAY_ON_TOP?
 - alarms
   - time of day
   - day of week repeat / no repeat
