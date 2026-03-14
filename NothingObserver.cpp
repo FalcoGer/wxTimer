@@ -1,10 +1,10 @@
 #include "NothingObserver.hpp"
 
-void NothingObserver::notify()
+void NothingObserver::notify([[maybe_unused]] TimerBase& timer)
 {
     m_isNotified = true;
 }
-void NothingObserver::reset()
+void NothingObserver::reset([[maybe_unused]] TimerBase& timer)
 {
     m_isNotified = false;
 }

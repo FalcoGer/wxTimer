@@ -39,6 +39,7 @@ add_executable(wxTimer
     TimerTable.cpp
     AudioPlaybackObserver.cpp
     NothingObserver.cpp
+    PopupObserver.cpp
 )
 
 target_link_libraries(wxTimer ${wxWidgets_LIBRARIES})

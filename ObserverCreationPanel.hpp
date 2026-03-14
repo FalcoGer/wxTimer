@@ -1,5 +1,6 @@
 #pragma once
 #include "IObserver.hpp"
+#include "TimerBase.hpp"
 #include "wxObserverCreationPanelBase.h"
 #include <memory>
 #include <wx/event.h>
@@ -22,7 +23,8 @@ class ObserverCreationPanel : public ObserverCreationPanelBase
         DO_NOTHING,
         COMMAND,
         POPUP,
-        AUDIO
+        AUDIO,
+        LOG
     };
 
     void updateRadioButtonControls(const ERadioButtonState STATE);
@@ -42,8 +44,8 @@ class ObserverCreationPanel : public ObserverCreationPanelBase
     void setObserver(std::unique_ptr<IObserver> observer);
 
   protected:
-    void onFileChange(wxCommandEvent& event) override;
-    void onButtonOpenClick(wxCommandEvent& event) override;
+    void onSoundFileChange(wxCommandEvent& event) override;
+    void onButtonSoundFileOpenClick(wxCommandEvent& event) override;
     void onCBLoopAudioChange(wxCommandEvent& event) override;
     void onRBDoNothing(wxCommandEvent& event) override;
     void onRBCommand(wxCommandEvent& event) override;
@@ -51,4 +53,11 @@ class ObserverCreationPanel : public ObserverCreationPanelBase
     void onButtonCommandClick(wxCommandEvent& event) override;
     void onRBPopup(wxCommandEvent& event) override;
     void onRBAudio(wxCommandEvent& event) override;
+    void onRBLog2File(wxCommandEvent& event) override;
+    void onLogFileChange(wxCommandEvent& event) override;
+    void onButtonLogFileOpenClick(wxCommandEvent& event) override;
+    void onLogExpiredTextChange(wxCommandEvent& event) override;
+    void onCBLogExpiredNL(wxCommandEvent& event) override;
+    void onLogResetTextChange(wxCommandEvent& event) override;
+    void onCBLogResetNL(wxCommandEvent& event) override;
 };

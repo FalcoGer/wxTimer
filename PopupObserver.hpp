@@ -1,10 +1,11 @@
 #pragma once
 
 #include "IObserver.hpp"
-class NothingObserver : public IObserver
+
+class PopupObserver : public IObserver
 {
   private:
-    bool m_isNotified;
+
   public:
     void notify(TimerBase& timer) override;
     void reset(TimerBase& timer) override;

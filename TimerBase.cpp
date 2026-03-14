@@ -32,12 +32,12 @@ void TimerBase::update()
 {
     if (hasElapsed() && !isNotified())
     {
-        m_observer->notify();
+        m_observer->notify(*this);
     }
 }
 void TimerBase::reset()
 {
-    (*m_observer).reset();
+    (*m_observer).reset(*this);
 }
 [[nodiscard]]
 auto TimerBase::isNotified() const -> bool

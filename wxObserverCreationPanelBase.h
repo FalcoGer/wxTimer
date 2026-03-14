@@ -40,28 +40,42 @@ class ObserverCreationPanelBase : public wxPanel
 		wxRadioButton* m_radioBtnNothing;
 		wxRadioButton* m_radioBtnAudio;
 		wxTextCtrl* m_textCtrlSoundFilePath;
-		wxBitmapButton* m_btnFileOpen;
+		wxBitmapButton* m_btnSoundFileOpen;
 		wxCheckBox* m_cbLoopAudio;
 		wxRadioButton* m_radioBtnCommand;
 		wxTextCtrl* m_textCtrlCommand;
 		wxBitmapButton* m_btnCommand;
 		wxRadioButton* m_radioBtnPopup;
+		wxRadioButton* m_radioBtnLog2File;
+		wxTextCtrl* m_textCtrlLogFile;
+		wxBitmapButton* m_btnLogFileOpen;
+		wxTextCtrl* m_textCtrlLogExpired;
+		wxCheckBox* m_cbLogExpiredNL;
+		wxTextCtrl* m_textCtrlLogReset;
+		wxCheckBox* m_cbLogResetNL;
 
 		// Virtual event handlers, override them in your derived class
 		virtual void onRBDoNothing( wxCommandEvent& event ) = 0;
 		virtual void onRBAudio( wxCommandEvent& event ) = 0;
-		virtual void onFileChange( wxCommandEvent& event ) = 0;
-		virtual void onButtonOpenClick( wxCommandEvent& event ) = 0;
+		virtual void onSoundFileChange( wxCommandEvent& event ) = 0;
+		virtual void onButtonSoundFileOpenClick( wxCommandEvent& event ) = 0;
 		virtual void onCBLoopAudioChange( wxCommandEvent& event ) = 0;
 		virtual void onRBCommand( wxCommandEvent& event ) = 0;
 		virtual void onCommandChange( wxCommandEvent& event ) = 0;
 		virtual void onButtonCommandClick( wxCommandEvent& event ) = 0;
 		virtual void onRBPopup( wxCommandEvent& event ) = 0;
+		virtual void onRBLog2File( wxCommandEvent& event ) = 0;
+		virtual void onLogFileChange( wxCommandEvent& event ) = 0;
+		virtual void onButtonLogFileOpenClick( wxCommandEvent& event ) = 0;
+		virtual void onLogExpiredTextChange( wxCommandEvent& event ) = 0;
+		virtual void onCBLogExpiredNL( wxCommandEvent& event ) = 0;
+		virtual void onLogResetTextChange( wxCommandEvent& event ) = 0;
+		virtual void onCBLogResetNL( wxCommandEvent& event ) = 0;
 
 
 	public:
 
-		ObserverCreationPanelBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL, const wxString& name = wxEmptyString );
+		ObserverCreationPanelBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 575,524 ), long style = wxTAB_TRAVERSAL, const wxString& name = wxEmptyString );
 
 		~ObserverCreationPanelBase();
 

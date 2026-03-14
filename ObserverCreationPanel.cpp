@@ -1,6 +1,7 @@
 #include "AudioPlaybackObserver.hpp"
 #include "NothingObserver.hpp"
 #include "ObserverCreationPanel.hpp"
+#include "PopupObserver.hpp"
 #include <wx/event.h>
 #include <wx/filedlg.h>
 #include <wx/gtk/filedlg.h>
@@ -8,7 +9,7 @@
 // NOLINTNEXTLINE(bugprone-throwing-static-initialization) // idk what to do with this
 wxDEFINE_EVENT(wxEVT_PANEL_UPDATED, wxCommandEvent);
 
-void ObserverCreationPanel::onFileChange(wxCommandEvent& event)
+void ObserverCreationPanel::onSoundFileChange(wxCommandEvent& event)
 {
     auto* const ptr_observer = dynamic_cast<AudioPlaybackObserver*>(m_observer.get());
     if (ptr_observer == nullptr)
@@ -30,7 +31,7 @@ void ObserverCreationPanel::onFileChange(wxCommandEvent& event)
     }
     notifyParent();
 }
-void ObserverCreationPanel::onButtonOpenClick([[maybe_unused]] wxCommandEvent& event)
+void ObserverCreationPanel::onButtonSoundFileOpenClick([[maybe_unused]] wxCommandEvent& event)
 {
     wxFileDialog dialog(
       this,
@@ -90,25 +91,70 @@ void ObserverCreationPanel::onButtonCommandClick([[maybe_unused]] wxCommandEvent
 }
 void ObserverCreationPanel::onRBPopup([[maybe_unused]] wxCommandEvent& event)
 {
+    m_observer = std::make_unique<PopupObserver>();
+
+    updateRadioButtonControls(ERadioButtonState::POPUP);
+}
+void ObserverCreationPanel::onRBLog2File([[maybe_unused]] wxCommandEvent& event)
+{
     // TODO: popup observer
 
     updateRadioButtonControls(ERadioButtonState::POPUP);
-    throw std::runtime_error("onRBPopup not implemented");
+    throw std::runtime_error("onRBLog2File not implemented");
+}
+void ObserverCreationPanel::onLogFileChange(wxCommandEvent& event)
+{
+
+}
+void ObserverCreationPanel::onButtonLogFileOpenClick(wxCommandEvent& event)
+{
+
+}
+void ObserverCreationPanel::onLogExpiredTextChange(wxCommandEvent& event)
+{
+
+}
+void ObserverCreationPanel::onCBLogExpiredNL(wxCommandEvent& event)
+{
+
+}
+void ObserverCreationPanel::onLogResetTextChange(wxCommandEvent& event)
+{
+
+}
+void ObserverCreationPanel::onCBLogResetNL(wxCommandEvent& event)
+{
+
 }
 
 void ObserverCreationPanel::updateRadioButtonControls(const ERadioButtonState STATE)
 {
-    wxCommandEvent event{};
+    wxCommandEvent event {};
+    const auto SYS_COLOR = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
+
+    // sound
+    m_textCtrlSoundFilePath->SetBackgroundColour(SYS_COLOR);
+    m_textCtrlSoundFilePath->Enable(false);
+    m_btnSoundFileOpen->Enable(false);
+    m_cbLoopAudio->Enable(false);
+
+    // command
+    m_textCtrlCommand->Enable(false);
+    m_btnCommand->Enable(false);
+
+    // log
+    m_textCtrlLogFile->Enable(false);
+    m_textCtrlLogFile->SetBackgroundColour(SYS_COLOR);
+    m_btnLogFileOpen->Enable(false);
+    m_textCtrlLogExpired->Enable(false);
+    m_textCtrlLogExpired->SetBackgroundColour(SYS_COLOR);
+    m_textCtrlLogReset->Enable(false);
+    m_textCtrlLogReset->SetBackgroundColour(SYS_COLOR);
+
     switch (STATE)
     {
         case ERadioButtonState::DO_NOTHING:
         {
-            m_textCtrlCommand->Enable(false);
-            m_btnCommand->Enable(false);
-            m_textCtrlSoundFilePath->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-            m_textCtrlSoundFilePath->Enable(false);
-            m_btnFileOpen->Enable(false);
-            m_cbLoopAudio->Enable(false);
             m_valid = true;
             break;
         }
@@ -116,34 +162,36 @@ void ObserverCreationPanel::updateRadioButtonControls(const ERadioButtonState ST
         {
             m_textCtrlCommand->Enable(true);
             m_btnCommand->Enable(true);
-            m_textCtrlSoundFilePath->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-            m_textCtrlSoundFilePath->Enable(false);
-            m_btnFileOpen->Enable(false);
-            m_cbLoopAudio->Enable(false);
             event.SetString(m_textCtrlCommand->GetValue());
             onCommandChange(event);
             break;
         }
         case ERadioButtonState::POPUP:
         {
-            m_textCtrlCommand->Enable(false);
-            m_btnCommand->Enable(false);
-            m_textCtrlSoundFilePath->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-            m_textCtrlSoundFilePath->Enable(false);
-            m_btnFileOpen->Enable(false);
-            m_cbLoopAudio->Enable(false);
             m_valid = true;
             break;
         }
         case ERadioButtonState::AUDIO:
         {
-            m_textCtrlCommand->Enable(false);
-            m_btnCommand->Enable(false);
             m_textCtrlSoundFilePath->Enable(true);
-            m_btnFileOpen->Enable(true);
+            m_btnSoundFileOpen->Enable(true);
             m_cbLoopAudio->Enable(true);
             event.SetString(m_textCtrlSoundFilePath->GetValue());
-            onFileChange(event);
+            onSoundFileChange(event);
+            break;
+        }
+        case ERadioButtonState::LOG:
+        {
+            m_textCtrlLogFile->Enable(true);
+            m_btnLogFileOpen->Enable(true);
+            m_textCtrlLogExpired->Enable(true);
+            m_textCtrlLogReset->Enable(true);
+            event.SetString(m_textCtrlLogFile->GetValue());
+            onLogFileChange(event);
+            event.SetString(m_textCtrlLogExpired->GetValue());
+            onLogExpiredTextChange(event);
+            event.SetString(m_textCtrlLogReset->GetValue());
+            onLogResetTextChange(event);
             break;
         }
     }
@@ -193,4 +241,5 @@ void ObserverCreationPanel::setObserver(std::unique_ptr<IObserver> observer)
     }
     // TODO: Command
     // TODO: Popup
+    // TODO: Log
 }

@@ -37,13 +37,9 @@ class AudioPlaybackObserver : public IObserver
     auto operator= (AudioPlaybackObserver&& rhs) noexcept -> AudioPlaybackObserver&;
 
     ~AudioPlaybackObserver() override;
-    void notify() override;
+    void notify(TimerBase& timer) override;
 
-    void reset() override
-    {
-        m_sound->Stop();
-        m_playbackStarted = false;
-    }
+    void reset(TimerBase& timer) override;
 
     [[nodiscard]]
     static auto GetFileExtensionList() -> const FileExtensionList&;

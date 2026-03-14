@@ -68,7 +68,7 @@ auto AudioPlaybackObserver::GetFileExtensionList() -> const FileExtensionList&
     return FILE_EXTENSION_LIST;
 }
 
-void AudioPlaybackObserver::notify()
+void AudioPlaybackObserver::notify([[maybe_unused]] TimerBase& timer)
 {
     if (m_playbackStarted)
     {
@@ -77,6 +77,12 @@ void AudioPlaybackObserver::notify()
     m_sound->Stop();
     m_sound->Play();
     m_playbackStarted = true;
+}
+
+void AudioPlaybackObserver::reset([[maybe_unused]] TimerBase& timer)
+{
+    m_sound->Stop();
+    m_playbackStarted = false;
 }
 
 auto AudioPlaybackObserver::isNotified() const -> bool
