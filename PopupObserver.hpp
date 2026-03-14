@@ -5,7 +5,7 @@
 class PopupObserver : public IObserver
 {
   private:
-
+    bool m_triggered{false};
   public:
     void notify(TimerBase& timer) override;
     void reset(TimerBase& timer) override;
